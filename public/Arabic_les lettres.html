@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعلم الحروف العربية - Apprends l'Arabe!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f5576c;
+            --success: #4caf50;
+            --bg-main: white;
+            --text-main: #333;
+            --shadow: rgba(0,0,0,0.3);
+            --arabic-bg: #fff9e6;
+        }
+        
+        body.dark-mode {
+            --bg-main: #1a1a2e;
+            --text-main: #eee;
+            --shadow: rgba(0,0,0,0.6);
+            --arabic-bg: #3a3a1e;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text-main);
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-main);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, var(--accent) 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 0.8s;
+        }
+        
+        .arabic-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            direction: rtl;
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #81c784);
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background: #f8f9fa;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        body.dark-mode .stats-bar {
+            background: #2a2a3e;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        
+        .stat-icon {
+            font-size: 24px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: #f8f9fa;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        body.dark-mode .nav-buttons {
+            background: #2a2a3e;
+        }
+        
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, var(--accent) 100%);
+        }
+        
+        .nav-btn.completed::after {
+            content: '✓';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--success);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .content {
+            padding: 30px;
+            min-height: 400px;
+        }
+        
+        .lesson {
+            display: none;
+        }
+        
+        .lesson.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .lesson h2 {
+            color: var(--secondary);
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 10px;
+        }
+        
+        .lesson h3 {
+            color: var(--primary);
+            font-size: 1.5em;
+            margin: 20px 0 10px 0;
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-left: 5px solid var(--accent);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            animation: slideIn 0.5s;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .letter-display {
+            background: var(--arabic-bg);
+            border: 3px solid var(--primary);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        body.dark-mode .letter-display {
+            background: #2a2a3e;
+        }
+        
+        .arabic-letter {
+            font-size: 120px;
+            font-weight: bold;
+            color: var(--secondary);
+            direction: rtl;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .letter-forms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .form-card {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        
+        body.dark-mode .form-card {
+            background: #2a2a3e;
+        }
+        
+        .form-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .form-card h4 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .form-card .arabic {
+            font-size: 60px;
+            color: var(--secondary);
+            direction: rtl;
+            margin: 15px 0;
+        }
+        
+        .exercise {
+            background: #fff9e6;
+            border: 3px dashed #ffa726;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+        }
+        
+        body.dark-mode .exercise {
+            background: #3a3a1e;
+        }
+        
+        .exercise h3 {
+            color: #ff6f00;
+            margin-bottom: 15px;
+        }
+        
+        .question {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+        }
+        
+        body.dark-mode .question {
+            background: #2a2a3e;
+        }
+        
+        .options {
+            margin: 10px 0;
+        }
+        
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background: #e3f2fd;
+            border: 2px solid #90caf9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        body.dark-mode .option {
+            background: #1a3a5a;
+            border-color: #4a7aa9;
+        }
+        
+        .option:hover {
+            background: #bbdefb;
+            transform: translateX(5px);
+        }
+        
+        .option input {
+            margin-right: 10px;
+        }
+        
+        .btn-check {
+            background: linear-gradient(135deg, var(--success) 0%, #81c784 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
+        
+        .btn-check:hover {
+            transform: scale(1.05);
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+            animation: bounceIn 0.5s;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .result.correct {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .result.incorrect {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+        
+        .word-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .word-card {
+            background: white;
+            border: 2px solid #90caf9;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        
+        body.dark-mode .word-card {
+            background: #2a2a3e;
+        }
+        
+        .word-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .word-card .arabic-word {
+            font-size: 36px;
+            color: var(--secondary);
+            direction: rtl;
+            margin-bottom: 10px;
+        }
+        
+        .word-card .translation {
+            color: var(--primary);
+            font-size: 14px;
+        }
+        
+        .certificate {
+            border: 5px solid gold;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        body.dark-mode .certificate {
+            background: #2a2a3e;
+            color: white;
+        }
+        
+        .certificate h2 {
+            color: gold;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .btn-print {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        
+        .matching-game {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .match-item {
+            padding: 15px;
+            background: #e1f5fe;
+            border: 2px solid #4fc3f7;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 24px;
+        }
+        
+        body.dark-mode .match-item {
+            background: #1a4a6a;
+        }
+        
+        .match-item:hover {
+            background: #b3e5fc;
+            transform: scale(1.05);
+        }
+        
+        .match-item.selected {
+            background: #ffeb3b;
+            border-color: #fbc02d;
+        }
+        
+        .match-item.matched {
+            background: #c8e6c9;
+            border-color: #66bb6a;
+            pointer-events: none;
+        }
+        
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .memory-card {
+            aspect-ratio: 1;
+            background: var(--primary);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            transition: transform 0.3s;
+        }
+        
+        .memory-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .memory-card.flipped {
+            background: white;
+            color: var(--secondary);
+            border: 2px solid var(--primary);
+        }
+        
+        .memory-card.matched {
+            background: var(--success);
+            pointer-events: none;
+        }
+        
+        .drag-drop-zone {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .drop-zone {
+            min-height: 150px;
+            border: 3px dashed #90caf9;
+            border-radius: 10px;
+            padding: 15px;
+            background: #e3f2fd;
+        }
+        
+        body.dark-mode .drop-zone {
+            background: #1a3a5a;
+        }
+        
+        .drop-zone h4 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .draggable {
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            margin: 5px;
+            cursor: move;
+            display: inline-block;
+            font-size: 24px;
+            transition: all 0.2s;
+        }
+        
+        body.dark-mode .draggable {
+            background: #2a2a3e;
+        }
+        
+        .draggable:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .dragging {
+            opacity: 0.5;
+        }
+        
+        .word-builder {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .letter-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            min-height: 80px;
+        }
+        
+        body.dark-mode .letter-bank {
+            background: #1a3a5a;
+        }
+        
+        .word-slots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            min-height: 100px;
+        }
+        
+        .letter-slot {
+            width: 80px;
+            height: 80px;
+            border: 3px dashed #90caf9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        body.dark-mode .letter-slot {
+            background: #2a2a3e;
+        }
+        
+        .letter-slot.filled {
+            background: #c8e6c9;
+            border-color: #4caf50;
+        }
+        
+        .letter-slot.over {
+            background: #fff9c4;
+            transform: scale(1.1);
+        }
+        
+        .completion-exercise {
+            display: grid;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .word-to-complete {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+        }
+        
+        body.dark-mode .word-to-complete {
+            background: #2a2a3e;
+        }
+        
+        .word-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            direction: rtl;
+        }
+        
+        .letter-box {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            background: white;
+        }
+        
+        body.dark-mode .letter-box {
+            background: #1a2a3e;
+        }
+        
+        .letter-box.blank {
+            background: #fff9e6;
+        }
+        
+        .letter-box input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 32px;
+            direction: rtl;
+        }
+        
+        .quick-quiz {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .quick-question {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            border: 3px solid var(--primary);
+            margin: 20px 0;
+        }
+        
+        body.dark-mode .quick-question {
+            background: #2a2a3e;
+        }
+        
+        .quick-question .arabic {
+            font-size: 120px;
+            color: var(--secondary);
+            margin: 20px 0;
+        }
+        
+        .quick-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .quick-option {
+            padding: 20px;
+            background: #e3f2fd;
+            border: 2px solid #90caf9;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            transition: all 0.2s;
+        }
+        
+        body.dark-mode .quick-option {
+            background: #1a3a5a;
+        }
+        
+        .quick-option:hover {
+            background: #90caf9;
+            transform: scale(1.05);
+        }
+        
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+        
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+            .nav-buttons, .stats-bar, .theme-toggle { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            <div class="arabic-title">تعلم الحروف العربية</div>
+            <h1>🌟 Apprends les 28 Lettres Arabes! 🌟</h1>
+            <p>Un voyage complet dans le monde de l'alphabet arabe</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+        
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-icon">⭐</span>
+                <span>Points: <span id="points">0</span></span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">🏆</span>
+                <span>Lettres: <span id="completed">0</span>/28</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">🎯</span>
+                <span>Score: <span id="accuracy">0</span>%</span>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showLesson(1)">Intro</button>
+            <button class="nav-btn" onclick="showLesson(2)">ا Alif</button>
+            <button class="nav-btn" onclick="showLesson(3)">ب Ba</button>
+            <button class="nav-btn" onclick="showLesson(4)">ت Ta</button>
+            <button class="nav-btn" onclick="showLesson(5)">ث Tha</button>
+            <button class="nav-btn" onclick="showLesson(6)">ج Jim</button>
+            <button class="nav-btn" onclick="showLesson(7)">ح Ha</button>
+            <button class="nav-btn" onclick="showLesson(8)">خ Kha</button>
+            <button class="nav-btn" onclick="showLesson(9)">د Dal</button>
+            <button class="nav-btn" onclick="showLesson(10)">ذ Dhal</button>
+            <button class="nav-btn" onclick="showLesson(11)">ر Ra</button>
+            <button class="nav-btn" onclick="showLesson(12)">ز Zay</button>
+            <button class="nav-btn" onclick="showLesson(13)">س Sin</button>
+            <button class="nav-btn" onclick="showLesson(14)">ش Shin</button>
+            <button class="nav-btn" onclick="showLesson(15)">ص Sad</button>
+            <button class="nav-btn" onclick="showLesson(16)">ض Dad</button>
+            <button class="nav-btn" onclick="showLesson(17)">ط Ta</button>
+            <button class="nav-btn" onclick="showLesson(18)">ظ Dha</button>
+            <button class="nav-btn" onclick="showLesson(19)">ع Ayn</button>
+            <button class="nav-btn" onclick="showLesson(20)">غ Ghayn</button>
+            <button class="nav-btn" onclick="showLesson(21)">ف Fa</button>
+            <button class="nav-btn" onclick="showLesson(22)">ق Qaf</button>
+            <button class="nav-btn" onclick="showLesson(23)">ك Kaf</button>
+            <button class="nav-btn" onclick="showLesson(24)">ل Lam</button>
+            <button class="nav-btn" onclick="showLesson(25)">م Mim</button>
+            <button class="nav-btn" onclick="showLesson(26)">ن Nun</button>
+            <button class="nav-btn" onclick="showLesson(27)">ه Ha</button>
+            <button class="nav-btn" onclick="showLesson(28)">و Waw</button>
+            <button class="nav-btn" onclick="showLesson(29)">ي Ya</button>
+            <button class="nav-btn" onclick="showLesson(30)">🎮 Jeu Mémoire</button>
+            <button class="nav-btn" onclick="showLesson(31)">🎯 Associe</button>
+            <button class="nav-btn" onclick="showLesson(32)">🎨 Drag & Drop</button>
+            <button class="nav-btn" onclick="showLesson(33)">✍️ Complete</button>
+            <button class="nav-btn" onclick="showLesson(34)">🏗️ Construis</button>
+            <button class="nav-btn" onclick="showLesson(35)">⚡ Rapide</button>
+            <button class="nav-btn" onclick="showLesson(36)">Quiz Final</button>
+        </div>
+        
+        <div class="content" id="mainContent">
+            <!-- Le contenu sera généré dynamiquement -->
+        </div>
+    </div>
+    
+    <script>
+        const letters = [
+            { id: 2, letter: 'ا', name: 'Alif', sound: 'A', forms: { isolated: 'ا', initial: 'ا', medial: 'ـا', final: 'ـا' }, words: [['أَب', 'Père'], ['أُمّ', 'Mère'], ['أَنَا', 'Je/Moi'], ['إِسْلاَم', 'Islam']] },
+            { id: 3, letter: 'ب', name: 'Ba', sound: 'B', forms: { isolated: 'ب', initial: 'بـ', medial: 'ـبـ', final: 'ـب' }, words: [['بَاب', 'Porte'], ['بَيْت', 'Maison'], ['كِتَاب', 'Livre'], ['بَقَرَة', 'Vache']] },
+            { id: 4, letter: 'ت', name: 'Ta', sound: 'T', forms: { isolated: 'ت', initial: 'تـ', medial: 'ـتـ', final: 'ـت' }, words: [['تَاج', 'Couronne'], ['تُفَّاح', 'Pomme'], ['بَيْت', 'Maison'], ['تِجَارَة', 'Commerce']] },
+            { id: 5, letter: 'ث', name: 'Tha', sound: 'Th', forms: { isolated: 'ث', initial: 'ثـ', medial: 'ـثـ', final: 'ـث' }, words: [['ثَوْب', 'Vêtement'], ['ثَلاَثَة', 'Trois'], ['ثَعْلَب', 'Renard'], ['مِيرَاث', 'Héritage']] },
+            { id: 6, letter: 'ج', name: 'Jim', sound: 'J', forms: { isolated: 'ج', initial: 'جـ', medial: 'ـجـ', final: 'ـج' }, words: [['جَمَل', 'Chameau'], ['جَبَل', 'Montagne'], ['مَسْجِد', 'Mosquée'], ['جَنَّة', 'Paradis']] },
+            { id: 7, letter: 'ح', name: 'Ha', sound: 'H', forms: { isolated: 'ح', initial: 'حـ', medial: 'ـحـ', final: 'ـح' }, words: [['حَلِيب', 'Lait'], ['حِصَان', 'Cheval'], ['صَبَاح', 'Matin'], ['حَق', 'Vérité']] },
+            { id: 8, letter: 'خ', name: 'Kha', sound: 'Kh', forms: { isolated: 'خ', initial: 'خـ', medial: 'ـخـ', final: 'ـخ' }, words: [['خُبْز', 'Pain'], ['خَرُوف', 'Mouton'], ['تَارِيخ', 'Date'], ['مَطْبَخ', 'Cuisine']] },
+            { id: 9, letter: 'د', name: 'Dal', sound: 'D', forms: { isolated: 'د', initial: 'د', medial: 'ـد', final: 'ـد' }, words: [['دَجَاجَة', 'Poule'], ['دُب', 'Ours'], ['وَرْد', 'Rose'], ['يَد', 'Main']] },
+            { id: 10, letter: 'ذ', name: 'Dhal', sound: 'Dh', forms: { isolated: 'ذ', initial: 'ذ', medial: 'ـذ', final: 'ـذ' }, words: [['ذِئْب', 'Loup'], ['ذَهَب', 'Or'], ['أُسْتَاذ', 'Professeur'], ['ذَكِي', 'Intelligent']] },
+            { id: 11, letter: 'ر', name: 'Ra', sound: 'R', forms: { isolated: 'ر', initial: 'ر', medial: 'ـر', final: 'ـر' }, words: [['رَأْس', 'Tête'], ['رُمَّان', 'Grenade'], ['بَحْر', 'Mer'], ['نَهْر', 'Rivière']] },
+            { id: 12, letter: 'ز', name: 'Zay', sound: 'Z', forms: { isolated: 'ز', initial: 'ز', medial: 'ـز', final: 'ـز' }, words: [['زَيْتُون', 'Olive'], ['زَهْرَة', 'Fleur'], ['خُبْز', 'Pain'], ['زَرَافَة', 'Girafe']] },
+            { id: 13, letter: 'س', name: 'Sin', sound: 'S', forms: { isolated: 'س', initial: 'سـ', medial: 'ـسـ', final: 'ـس' }, words: [['سَمَك', 'Poisson'], ['شَمْس', 'Soleil'], ['رَأْس', 'Tête'], ['سُوق', 'Marché']] },
+            { id: 14, letter: 'ش', name: 'Shin', sound: 'Sh', forms: { isolated: 'ش', initial: 'شـ', medial: 'ـشـ', final: 'ـش' }, words: [['شَجَرَة', 'Arbre'], ['شَمْس', 'Soleil'], ['عَطْش', 'Soif'], ['شَاي', 'Thé']] },
+            { id: 15, letter: 'ص', name: 'Sad', sound: 'S', forms: { isolated: 'ص', initial: 'صـ', medial: 'ـصـ', final: 'ـص' }, words: [['صَلاَة', 'Prière'], ['صَدِيق', 'Ami'], ['قِصَّة', 'Histoire'], ['فُرْصَة', 'Occasion']] },
+            { id: 16, letter: 'ض', name: 'Dad', sound: 'D', forms: { isolated: 'ض', initial: 'ضـ', medial: 'ـضـ', final: 'ـض' }, words: [['ضَوْء', 'Lumière'], ['أَرْض', 'Terre'], ['أَبْيَض', 'Blanc'], ['رَمَضَان', 'Ramadan']] },
+            { id: 17, letter: 'ط', name: 'Ta', sound: 'T', forms: { isolated: 'ط', initial: 'طـ', medial: 'ـطـ', final: 'ـط' }, words: [['طَائِر', 'Oiseau'], ['طَبِيب', 'Médecin'], ['خَط', 'Ligne'], ['قِط', 'Chat']] },
+            { id: 18, letter: 'ظ', name: 'Dha', sound: 'Dh', forms: { isolated: 'ظ', initial: 'ظـ', medial: 'ـظـ', final: 'ـظ' }, words: [['ظُهْر', 'Midi'], ['ظَرْف', 'Enveloppe'], ['حَظ', 'Chance'], ['نَظِيف', 'Propre']] },
+            { id: 19, letter: 'ع', name: 'Ayn', sound: 'A', forms: { isolated: 'ع', initial: 'عـ', medial: 'ـعـ', final: 'ـع' }, words: [['عَيْن', 'Œil'], ['عَسَل', 'Miel'], ['شَارِع', 'Rue'], ['سَرِيع', 'Rapide']] },
+            { id: 20, letter: 'غ', name: 'Ghayn', sound: 'Gh', forms: { isolated: 'غ', initial: 'غـ', medial: 'ـغـ', final: 'ـغ' }, words: [['غُرَاب', 'Corbeau'], ['غُرْفَة', 'Chambre'], ['بَلاَغ', 'Message'], ['صِغِير', 'Petit']] },
+            { id: 21, letter: 'ف', name: 'Fa', sound: 'F', forms: { isolated: 'ف', initial: 'فـ', medial: 'ـفـ', final: 'ـف' }, words: [['فِيل', 'Éléphant'], ['فَاكِهَة', 'Fruit'], ['صَيْف', 'Été'], ['ضَعِيف', 'Faible']] },
+            { id: 22, letter: 'ق', name: 'Qaf', sound: 'Q', forms: { isolated: 'ق', initial: 'قـ', medial: 'ـقـ', final: 'ـق' }, words: [['قَلَم', 'Stylo'], ['قِطَّة', 'Chat'], ['صَدِيق', 'Ami'], ['طَرِيق', 'Chemin']] },
+            { id: 23, letter: 'ك', name: 'Kaf', sound: 'K', forms: { isolated: 'ك', initial: 'كـ', medial: 'ـكـ', final: 'ـك' }, words: [['كَلْب', 'Chien'], ['كِتَاب', 'Livre'], ['مَلِك', 'Roi'], ['سَمَك', 'Poisson']] },
+            { id: 24, letter: 'ل', name: 'Lam', sound: 'L', forms: { isolated: 'ل', initial: 'لـ', medial: 'ـلـ', final: 'ـل' }, words: [['لَيْمُون', 'Citron'], ['لَيْل', 'Nuit'], ['جَمَل', 'Chameau'], ['عَسَل', 'Miel']] },
+            { id: 25, letter: 'م', name: 'Mim', sound: 'M', forms: { isolated: 'م', initial: 'مـ', medial: 'ـمـ', final: 'ـم' }, words: [['مَاء', 'Eau'], ['مَدْرَسَة', 'École'], ['قَلَم', 'Stylo'], ['نَجْم', 'Étoile']] },
+            { id: 26, letter: 'ن', name: 'Nun', sound: 'N', forms: { isolated: 'ن', initial: 'نـ', medial: 'ـنـ', final: 'ـن' }, words: [['نَار', 'Feu'], ['نُجُوم', 'Étoiles'], ['بُنْت', 'Fille'], ['نِعْمَة', 'Bienfait']] },
+            { id: 27, letter: 'ه', name: 'Ha', sound: 'H', forms: { isolated: 'ه', initial: 'هـ', medial: 'ـهـ', final: 'ـه' }, words: [['هِلاَل', 'Croissant'], ['هَدِيَّة', 'Cadeau'], ['فَاكِهَة', 'Fruit'], ['إِلٰه', 'Dieu']] },
+            { id: 28, letter: 'و', name: 'Waw', sound: 'W/U/O', forms: { isolated: 'و', initial: 'و', medial: 'ـو', final: 'ـو' }, words: [['وَرْد', 'Rose'], ['وَلَد', 'Garçon'], ['لَوْن', 'Couleur'], ['نُور', 'Lumière']] },
+            { id: 29, letter: 'ي', name: 'Ya', sound: 'Y/I', forms: { isolated: 'ي', initial: 'يـ', medial: 'ـيـ', final: 'ـي' }, words: [['يَد', 'Main'], ['بَيْت', 'Maison'], ['عَيْن', 'Œil'], ['كَبِير', 'Grand']] }
+        ];
+
+        let gameState = {
+            points: 0,
+            completedLessons: [],
+            totalQuestions: 0,
+            correctAnswers: 0,
+            isDarkMode: false,
+            memoryCards: [],
+            memoryFlipped: [],
+            memoryMatched: []
+        };
+        
+        function generateLessonContent() {
+            const content = document.getElementById('mainContent');
+            let html = `
+                <div class="lesson active" id="lesson1">
+                    <h2>📚 Bienvenue dans le monde de l'arabe!</h2>
+                    
+                    <div class="info-box">
+                        <h3>C'est parti pour l'aventure! 🚀</h3>
+                        <p>L'alphabet arabe compte <strong>28 lettres</strong>. Tu vas toutes les apprendre!</p>
+                        <p>Ce qui est spécial avec l'arabe:</p>
+                        <ul style="margin: 15px 0; padding-left: 30px;">
+                            <li>On écrit de droite à gauche ← comme ça!</li>
+                            <li>Les lettres changent de forme selon leur position dans le mot</li>
+                            <li>C'est amusant et créatif!</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>🎨 Les formes des lettres</h3>
+                    <p>Chaque lettre arabe a jusqu'à <strong>4 formes différentes</strong>:</p>
+                    
+                    <div class="letter-forms">
+                        <div class="form-card">
+                            <h4>Au début</h4>
+                            <p>Quand la lettre commence le mot</p>
+                            <div class="arabic">بـ</div>
+                        </div>
+                        <div class="form-card">
+                            <h4>Au milieu</h4>
+                            <p>Quand elle est entre deux lettres</p>
+                            <div class="arabic">ـبـ</div>
+                        </div>
+                        <div class="form-card">
+                            <h4>À la fin</h4>
+                            <p>Quand elle termine le mot</p>
+                            <div class="arabic">ـب</div>
+                        </div>
+                        <div class="form-card">
+                            <h4>Isolée</h4>
+                            <p>Quand elle est toute seule</p>
+                            <div class="arabic">ب</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h3>🎮 Prêt à commencer?</h3>
+                        <p>Clique sur une lettre dans le menu pour commencer ton apprentissage!</p>
+                    </div>
+                </div>
+            `;
+            
+            // Generate lessons for all letters
+            letters.forEach(letterData => {
+                html += `
+                    <div class="lesson" id="lesson${letterData.id}">
+                        <h2>✨ La lettre ${letterData.letter} (${letterData.name})</h2>
+                        
+                        <div class="letter-display">
+                            <h3>Voici la lettre ${letterData.name.toUpperCase()}!</h3>
+                            <div class="arabic-letter">${letterData.letter}</div>
+                            <p>Elle se prononce comme <strong>${letterData.sound}</strong></p>
+                        </div>
+                        
+                        <h3>🎨 Les différentes formes de ${letterData.letter}</h3>
+                        <div class="letter-forms">
+                            <div class="form-card">
+                                <h4>Au début</h4>
+                                <div class="arabic">${letterData.forms.initial}</div>
+                            </div>
+                            <div class="form-card">
+                                <h4>Au milieu</h4>
+                                <div class="arabic">${letterData.forms.medial}</div>
+                            </div>
+                            <div class="form-card">
+                                <h4>À la fin</h4>
+                                <div class="arabic">${letterData.forms.final}</div>
+                            </div>
+                            <div class="form-card">
+                                <h4>Isolée</h4>
+                                <div class="arabic">${letterData.forms.isolated}</div>
+                            </div>
+                        </div>
+                        
+                        <h3>📝 Exemples de mots avec ${letterData.letter}</h3>
+                        <div class="word-examples">
+                            ${letterData.words.map(word => `
+                                <div class="word-card">
+                                    <div class="arabic-word">${word[0]}</div>
+                                    <div class="translation">${word[1]}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="exercise">
+                            <h3>🎯 Quiz: Connais-tu la lettre ${letterData.letter}?</h3>
+                            
+                            <div class="question">
+                                <p><strong>Question 1:</strong> Comment se prononce la lettre ${letterData.letter}?</p>
+                                <div class="options">
+                                    <label class="option">
+                                        <input type="radio" name="q${letterData.id}a" value="a"> ${letterData.sound}
+                                    </label>
+                                    <label class="option">
+                                        <input type="radio" name="q${letterData.id}a" value="b"> Autre son
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="question">
+                                <p><strong>Question 2:</strong> Quelle est la forme isolée de ${letterData.name}?</p>
+                                <div class="options">
+                                    <label class="option">
+                                        <input type="radio" name="q${letterData.id}b" value="a"> ${letterData.forms.isolated}
+                                    </label>
+                                    <label class="option">
+                                        <input type="radio" name="q${letterData.id}b" value="b"> ${letterData.forms.initial}
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button class="btn-check" onclick="checkLesson(${letterData.id}, ['a', 'a'], 10)">Vérifier mes réponses</button>
+                            <div id="result${letterData.id}" class="result" style="display:none;"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Memory Game
+            html += `
+                <div class="lesson" id="lesson30">
+                    <h2>🎮 Jeu de Mémoire</h2>
+                    
+                    <div class="info-box">
+                        <h3>Teste ta mémoire!</h3>
+                        <p>Trouve les paires de lettres identiques. Clique sur les cartes pour les retourner!</p>
+                    </div>
+                    
+                    <div class="memory-game" id="memoryGame"></div>
+                    
+                    <div id="memoryResult" class="result" style="display:none;"></div>
+                </div>
+            `;
+            
+            // Matching Game
+            html += `
+                <div class="lesson" id="lesson31">
+                    <h2>🎯 Jeu d'Association</h2>
+                    
+                    <div class="info-box">
+                        <h3>Associe les lettres à leurs sons!</h3>
+                        <p>Clique sur une lettre puis sur son son correspondant.</p>
+                    </div>
+                    
+                    <div class="matching-game" id="matchingGame"></div>
+                    
+                    <div id="matchResult" class="result" style="display:none;"></div>
+                </div>
+            `;
+            
+            // Drag & Drop Game
+            html += `
+                <div class="lesson" id="lesson32">
+                    <h2>🎨 Glisse et Dépose</h2>
+                    
+                    <div class="info-box">
+                        <h3>Classe les lettres!</h3>
+                        <p>Glisse les lettres dans la bonne catégorie selon leur nombre de points.</p>
+                    </div>
+                    
+                    <div class="drag-drop-zone">
+                        <div class="drop-zone" data-category="1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                            <h4>1 point</h4>
+                            <div class="drop-content" id="drop1"></div>
+                        </div>
+                        <div class="drop-zone" data-category="2" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                            <h4>2 points</h4>
+                            <div class="drop-content" id="drop2"></div>
+                        </div>
+                        <div class="drop-zone" data-category="3" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                            <h4>3 points</h4>
+                            <div class="drop-content" id="drop3"></div>
+                        </div>
+                        <div class="drop-zone" data-category="0" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                            <h4>Pas de points</h4>
+                            <div class="drop-content" id="drop0"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="letter-bank" id="dragLetters"></div>
+                    
+                    <button class="btn-check" onclick="checkDragDrop()">Vérifier</button>
+                    <div id="dragResult" class="result" style="display:none;"></div>
+                </div>
+            `;
+            
+            // Word Completion Exercise
+            html += `
+                <div class="lesson" id="lesson33">
+                    <h2>✍️ Complète les Mots</h2>
+                    
+                    <div class="info-box">
+                        <h3>Remplis les lettres manquantes!</h3>
+                        <p>Regarde bien les mots et complète les lettres qui manquent.</p>
+                    </div>
+                    
+                    <div class="completion-exercise" id="completionExercise"></div>
+                    
+                    <button class="btn-check" onclick="checkCompletion()">Vérifier</button>
+                    <div id="completionResult" class="result" style="display:none;"></div>
+                </div>
+            `;
+            
+            // Word Builder
+            html += `
+                <div class="lesson" id="lesson34">
+                    <h2>🏗️ Construis des Mots</h2>
+                    
+                    <div class="info-box">
+                        <h3>Forme le mot demandé!</h3>
+                        <p>Glisse les lettres dans le bon ordre pour former le mot.</p>
+                    </div>
+                    
+                    <div class="word-builder">
+                        <h3 style="text-align: center;">Forme le mot: <span id="wordTarget" style="color: var(--accent);"></span></h3>
+                        
+                        <div class="word-slots" id="wordSlots"></div>
+                        
+                        <div class="letter-bank" id="letterBank"></div>
+                    </div>
+                    
+                    <button class="btn-check" onclick="checkWordBuilder()">Vérifier</button>
+                    <div id="builderResult" class="result" style="display:none;"></div>
+                </div>
+            `;
+            
+            // Quick Recognition Quiz
+            html += `
+                <div class="lesson" id="lesson35">
+                    <h2>⚡ Reconnaissance Rapide</h2>
+                    
+                    <div class="info-box">
+                        <h3>Combien de lettres reconnais-tu en 60 secondes?</h3>
+                        <p>Clique sur le bon nom de la lettre le plus vite possible!</p>
+                    </div>
+                    
+                    <div class="quick-quiz">
+                        <div class="timer">Temps: <span id="timer">60</span>s</div>
+                        <div class="stat-item" style="justify-content: center; margin: 10px 0;">
+                            <span>Score: <span id="quickScore">0</span> / <span id="quickTotal">0</span></span>
+                        </div>
+                        
+                        <div class="quick-question" id="quickQuestion"></div>
+                        
+                        <button class="btn-check" onclick="startQuickQuiz()" id="startQuickBtn">Commencer!</button>
+                        <div id="quickResult" class="result" style="display:none;"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Final Quiz
+            html += `
+                <div class="lesson" id="lesson36">
+                    <h2>🏆 Quiz Final - Teste tes connaissances!</h2>
+                    
+                    <div class="info-box">
+                        <h3>C'est l'heure du grand quiz! 🎉</h3>
+                        <p>Réponds à toutes les questions pour obtenir ton certificat!</p>
+                    </div>
+                    
+                    <div class="exercise">
+                        <div class="question">
+                            <p><strong>Q1:</strong> Combien y a-t-il de lettres dans l'alphabet arabe?</p>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="qf1" value="a"> 26</label>
+                                <label class="option"><input type="radio" name="qf1" value="b"> 28</label>
+                                <label class="option"><input type="radio" name="qf1" value="c"> 30</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <p><strong>Q2:</strong> Dans quel sens écrit-on l'arabe?</p>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="qf2" value="a"> Gauche à droite</label>
+                                <label class="option"><input type="radio" name="qf2" value="b"> Droite à gauche</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <p><strong>Q3:</strong> Quelle lettre se prononce "BA"?</p>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="qf3" value="a"> ب</label>
+                                <label class="option"><input type="radio" name="qf3" value="b"> ت</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <p><strong>Q4:</strong> Quelle lettre se prononce "NUN"?</p>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="qf4" value="a"> م</label>
+                                <label class="option"><input type="radio" name="qf4" value="b"> ن</label>
+                            </div>
+                        </div>
+                        
+                        <div class="question">
+                            <p><strong>Q5:</strong> Combien de formes peut avoir une lettre arabe?</p>
+                            <div class="options">
+                                <label class="option"><input type="radio" name="qf5" value="a"> 2</label>
+                                <label class="option"><input type="radio" name="qf5" value="b"> 4</label>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-check" onclick="checkFinalQuiz()">Obtenir mon score!</button>
+                        <div id="resultFinal" class="result" style="display:none;"></div>
+                    </div>
+                    
+                    <div id="certificate" style="display:none;">
+                        <div class="certificate">
+                            <h2>🏆 CERTIFICAT DE RÉUSSITE 🏆</h2>
+                            <div class="arabic-title">شهادة نجاح</div>
+                            <p style="font-size: 1.5em; margin: 20px 0;">Ce certificat est décerné à</p>
+                            <h3 style="font-size: 2em; color: var(--primary); margin: 20px 0;">
+                                <input type="text" id="studentName" placeholder="Ton nom" style="border: none; border-bottom: 2px solid gold; background: transparent; text-align: center; font-size: 1em; width: 300px;">
+                            </h3>
+                            <p style="font-size: 1.2em; margin: 20px 0;">Pour avoir maîtrisé</p>
+                            <p style="font-size: 1.5em; font-weight: bold; color: var(--accent);">L'Alphabet Arabe Complet - 28 Lettres</p>
+                            <p style="margin-top: 30px;">🌟 Score Final: <span id="finalScore"></span>% 🌟</p>
+                            <p style="margin-top: 10px;">📅 Date: <span id="certDate"></span></p>
+                            
+                            <button class="btn-print" onclick="window.print()">🖨️ Imprimer mon certificat</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+        }
+        
+        function initMemoryGame() {
+            const selectedLetters = letters.slice(0, 8);
+            const cards = [...selectedLetters, ...selectedLetters]
+                .sort(() => Math.random() - 0.5)
+                .map((letter, index) => ({
+                    id: index,
+                    letter: letter.letter,
+                    flipped: false,
+                    matched: false
+                }));
+            
+            gameState.memoryCards = cards;
+            gameState.memoryFlipped = [];
+            
+            const gameDiv = document.getElementById('memoryGame');
+            gameDiv.innerHTML = cards.map(card => `
+                <div class="memory-card" data-id="${card.id}" onclick="flipCard(${card.id})">
+                    ?
+                </div>
+            `).join('');
+        }
+        
+        function flipCard(id) {
+            if (gameState.memoryFlipped.length >= 2) return;
+            
+            const card = gameState.memoryCards[id];
+            if (card.flipped || card.matched) return;
+            
+            card.flipped = true;
+            gameState.memoryFlipped.push(id);
+            
+            const cardEl = document.querySelector(`[data-id="${id}"]`);
+            cardEl.classList.add('flipped');
+            cardEl.textContent = card.letter;
+            
+            if (gameState.memoryFlipped.length === 2) {
+                setTimeout(checkMemoryMatch, 1000);
+            }
+        }
+        
+        function checkMemoryMatch() {
+            const [id1, id2] = gameState.memoryFlipped;
+            const card1 = gameState.memoryCards[id1];
+            const card2 = gameState.memoryCards[id2];
+            
+            if (card1.letter === card2.letter) {
+                card1.matched = true;
+                card2.matched = true;
+                document.querySelector(`[data-id="${id1}"]`).classList.add('matched');
+                document.querySelector(`[data-id="${id2}"]`).classList.add('matched');
+                
+                gameState.points += 20;
+                updateStats();
+                
+                if (gameState.memoryCards.every(c => c.matched)) {
+                    const result = document.getElementById('memoryResult');
+                    result.innerHTML = "🎉 Bravo! Tu as trouvé toutes les paires!";
+                    result.className = "result correct";
+                    result.style.display = "block";
+                    
+                    if (!gameState.completedLessons.includes(30)) {
+                        gameState.completedLessons.push(30);
+                        document.querySelectorAll('.nav-btn')[29].classList.add('completed');
+                    }
+                }
+            } else {
+                card1.flipped = false;
+                card2.flipped = false;
+                document.querySelector(`[data-id="${id1}"]`).classList.remove('flipped');
+                document.querySelector(`[data-id="${id2}"]`).classList.remove('flipped');
+                document.querySelector(`[data-id="${id1}"]`).textContent = '?';
+                document.querySelector(`[data-id="${id2}"]`).textContent = '?';
+            }
+            
+            gameState.memoryFlipped = [];
+        }
+        
+        function initMatchingGame() {
+            const selectedLetters = letters.slice(0, 6);
+            const gameDiv = document.getElementById('matchingGame');
+            
+            let html = '';
+            selectedLetters.forEach((letter, i) => {
+                html += `<div class="match-item" data-id="${i}" onclick="selectMatch(this)">${letter.letter}</div>`;
+                html += `<div class="match-item" data-pair="${i}" onclick="selectMatch(this)">${letter.sound}</div>`;
+            });
+            
+            gameDiv.innerHTML = html;
+            gameState.selectedMatch = null;
+            gameState.matchedPairs = 0;
+        }
+        
+        function selectMatch(element) {
+            if (element.classList.contains('matched')) return;
+            
+            if (!gameState.selectedMatch) {
+                document.querySelectorAll('.match-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                element.classList.add('selected');
+                gameState.selectedMatch = element;
+            } else {
+                const id1 = gameState.selectedMatch.dataset.id || gameState.selectedMatch.dataset.pair;
+                const id2 = element.dataset.id || element.dataset.pair;
+                
+                if (id1 === id2 && gameState.selectedMatch !== element) {
+                    gameState.selectedMatch.classList.add('matched');
+                    element.classList.add('matched');
+                    gameState.selectedMatch.classList.remove('selected');
+                    gameState.matchedPairs++;
+                    
+                    gameState.points += 15;
+                    updateStats();
+                    
+                    if (gameState.matchedPairs === 6) {
+                        const result = document.getElementById('matchResult');
+                        result.innerHTML = "🎊 Excellent! Tu as tout associé correctement!";
+                        result.className = "result correct";
+                        result.style.display = "block";
+                        
+                        if (!gameState.completedLessons.includes(31)) {
+                            gameState.completedLessons.push(31);
+                            document.querySelectorAll('.nav-btn')[30].classList.add('completed');
+                        }
+                    }
+                } else {
+                    gameState.selectedMatch.classList.remove('selected');
+                }
+                gameState.selectedMatch = null;
+            }
+        }
+        
+        function toggleTheme() {
+            gameState.isDarkMode = !gameState.isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            document.querySelector('.theme-toggle').textContent = gameState.isDarkMode ? '☀️' : '🌙';
+        }
+        
+        function updateStats() {
+            document.getElementById('points').textContent = gameState.points;
+            document.getElementById('completed').textContent = gameState.completedLessons.length;
+            const accuracy = gameState.totalQuestions > 0 
+                ? Math.round((gameState.correctAnswers / gameState.totalQuestions) * 100) 
+                : 0;
+            document.getElementById('accuracy').textContent = accuracy;
+            
+            const progress = (gameState.completedLessons.length / 28) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+        
+        function showLesson(num) {
+            document.querySelectorAll('.lesson').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById('lesson' + num).classList.add('active');
+            document.querySelectorAll('.nav-btn')[num - 1].classList.add('active');
+            
+            if (num === 30) initMemoryGame();
+            if (num === 31) initMatchingGame();
+            if (num === 32) initDragDrop();
+            if (num === 33) initCompletion();
+            if (num === 34) initWordBuilder();
+            if (num === 35) {
+                document.getElementById('quickScore').textContent = '0';
+                document.getElementById('quickTotal').textContent = '0';
+                document.getElementById('startQuickBtn').style.display = 'block';
+                document.getElementById('quickQuestion').innerHTML = '';
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function checkLesson(lessonNum, correctAnswers, points) {
+            const answers = [];
+            let allAnswered = true;
+            
+            for (let i = 0; i < correctAnswers.length; i++) {
+                const letter = String.fromCharCode(97 + i);
+                const selected = document.querySelector(`input[name="q${lessonNum}${letter}"]:checked`);
+                if (!selected) {
+                    allAnswered = false;
+                    break;
+                }
+                answers.push(selected.value);
+            }
+            
+            const result = document.getElementById('result' + lessonNum);
+            
+            if (!allAnswered) {
+                result.innerHTML = "⚠️ Réponds à toutes les questions!";
+                result.className = "result incorrect";
+                result.style.display = "block";
+                return;
+            }
+            
+            let score = 0;
+            for (let i = 0; i < answers.length; i++) {
+                gameState.totalQuestions++;
+                if (answers[i] === correctAnswers[i]) {
+                    score++;
+                    gameState.correctAnswers++;
+                }
+            }
+            
+            if (score === correctAnswers.length) {
+                result.innerHTML = "🎉 Parfait! Tu maîtrises cette lettre!";
+                result.className = "result correct";
+                
+                if (!gameState.completedLessons.includes(lessonNum)) {
+                    gameState.completedLessons.push(lessonNum);
+                    gameState.points += points;
+                    document.querySelectorAll('.nav-btn')[lessonNum - 1].classList.add('completed');
+                }
+            } else {
+                result.innerHTML = "📄 Presque! Relis la leçon et réessaie!";
+                result.className = "result incorrect";
+            }
+            
+            result.style.display = "block";
+            updateStats();
+        }
+        
+        function checkFinalQuiz() {
+            const correctAnswers = ['b', 'b', 'a', 'b', 'b'];
+            let score = 0;
+            
+            for (let i = 1; i <= 5; i++) {
+                const selected = document.querySelector(`input[name="qf${i}"]:checked`);
+                if (!selected) {
+                    const result = document.getElementById('resultFinal');
+                    result.innerHTML = "⚠️ Réponds à toutes les questions!";
+                    result.className = "result incorrect";
+                    result.style.display = "block";
+                    return;
+                }
+                gameState.totalQuestions++;
+                if (selected.value === correctAnswers[i - 1]) {
+                    score++;
+                    gameState.correctAnswers++;
+                }
+            }
+            
+            const result = document.getElementById('resultFinal');
+            const percentage = (score / 5) * 100;
+            
+            if (score >= 4) {
+                result.innerHTML = `🏆 EXCELLENT! ${score}/5! Tu maîtrises l'alphabet arabe!`;
+                result.className = "result correct";
+                
+                if (!gameState.completedLessons.includes(36)) {
+                    gameState.completedLessons.push(36);
+                    gameState.points += 100;
+                    document.querySelectorAll('.nav-btn')[35].classList.add('completed');
+                }
+                
+                setTimeout(() => {
+                    document.getElementById('certificate').style.display = 'block';
+                    document.getElementById('finalScore').textContent = Math.round((gameState.correctAnswers / gameState.totalQuestions) * 100);
+                    document.getElementById('certDate').textContent = new Date().toLocaleDateString('fr-FR');
+                }, 1000);
+            } else {
+                result.innerHTML = `📚 Score: ${score}/5. Relis les leçons!`;
+                result.className = "result incorrect";
+            }
+            
+            result.style.display = "block";
+            updateStats();
+        }
+        
+        // Drag & Drop Functions
+        function initDragDrop() {
+            const dragLetters = [
+                { letter: 'ب', points: 1 },
+                { letter: 'ت', points: 2 },
+                { letter: 'ث', points: 3 },
+                { letter: 'ن', points: 1 },
+                { letter: 'ي', points: 2 },
+                { letter: 'ا', points: 0 },
+                { letter: 'د', points: 0 },
+                { letter: 'ر', points: 0 }
+            ];
+            
+            gameState.dragLetters = dragLetters.sort(() => Math.random() - 0.5);
+            
+            const bankDiv = document.getElementById('dragLetters');
+            bankDiv.innerHTML = dragLetters.map((item, i) => `
+                <div class="draggable" draggable="true" ondragstart="drag(event)" data-points="${item.points}" id="drag${i}">
+                    ${item.letter}
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.drop-content').forEach(d => d.innerHTML = '');
+        }
+        
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('over');
+        }
+        
+        function dragLeave(ev) {
+            ev.currentTarget.classList.remove('over');
+        }
+        
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+            ev.target.classList.add('dragging');
+        }
+        
+        function drop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('over');
+            const data = ev.dataTransfer.getData("text");
+            const draggedElement = document.getElementById(data);
+            draggedElement.classList.remove('dragging');
+            
+            const dropZone = ev.currentTarget.closest('.drop-zone');
+            const dropContent = dropZone.querySelector('.drop-content');
+            dropContent.appendChild(draggedElement);
+        }
+        
+        function checkDragDrop() {
+            let correct = 0;
+            let total = 0;
+            
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                const category = zone.dataset.category;
+                const letters = zone.querySelectorAll('.draggable');
+                
+                letters.forEach(letter => {
+                    total++;
+                    if (letter.dataset.points === category) {
+                        correct++;
+                    }
+                });
+            });
+            
+            const result = document.getElementById('dragResult');
+            
+            if (correct === total) {
+                result.innerHTML = "🎉 Parfait! Toutes les lettres sont bien classées!";
+                result.className = "result correct";
+                
+                if (!gameState.completedLessons.includes(32)) {
+                    gameState.completedLessons.push(32);
+                    gameState.points += 30;
+                    gameState.correctAnswers += total;
+                    gameState.totalQuestions += total;
+                    document.querySelectorAll('.nav-btn')[31].classList.add('completed');
+                }
+            } else {
+                result.innerHTML = `📝 Tu as ${correct}/${total} bonnes réponses. Réessaie!`;
+                result.className = "result incorrect";
+                gameState.totalQuestions += total;
+                gameState.correctAnswers += correct;
+            }
+            
+            result.style.display = "block";
+            updateStats();
+        }
+        
+        // Word Completion Functions
+        function initCompletion() {
+            const words = [
+                { word: ['ب', 'ي', 'ت'], missing: [1], translation: 'Maison' },
+                { word: ['ك', 'ت', 'ا', 'ب'], missing: [2], translation: 'Livre' },
+                { word: ['ق', 'ل', 'م'], missing: [0], translation: 'Stylo' },
+                { word: ['ن', 'ا', 'ر'], missing: [1], translation: 'Feu' }
+            ];
+            
+            gameState.completionWords = words;
+            
+            const container = document.getElementById('completionExercise');
+            container.innerHTML = words.map((item, idx) => `
+                <div class="word-to-complete">
+                    <p style="text-align: center; margin-bottom: 10px;"><strong>${item.translation}</strong></p>
+                    <div class="word-display">
+                        ${item.word.map((letter, i) => `
+                            <div class="letter-box ${item.missing.includes(i) ? 'blank' : ''}">
+                                ${item.missing.includes(i) ? 
+                                    `<input type="text" maxlength="1" id="completion${idx}_${i}" style="color: var(--secondary);">` : 
+                                    letter}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function checkCompletion() {
+            let correct = 0;
+            let total = 0;
+            
+            gameState.completionWords.forEach((item, idx) => {
+                item.missing.forEach(pos => {
+                    total++;
+                    const input = document.getElementById(`completion${idx}_${pos}`);
+                    if (input && input.value === item.word[pos]) {
+                        correct++;
+                        input.style.background = '#c8e6c9';
+                    } else if (input) {
+                        input.style.background = '#ffcdd2';
+                    }
+                });
+            });
+            
+            const result = document.getElementById('completionResult');
+            
+            if (correct === total) {
+                result.innerHTML = "🎊 Excellent! Tous les mots sont complets!";
+                result.className = "result correct";
+                
+                if (!gameState.completedLessons.includes(33)) {
+                    gameState.completedLessons.push(33);
+                    gameState.points += 25;
+                    document.querySelectorAll('.nav-btn')[32].classList.add('completed');
+                }
+            } else {
+                result.innerHTML = `📝 Tu as ${correct}/${total} bonnes réponses!`;
+                result.className = "result incorrect";
+            }
+            
+            gameState.totalQuestions += total;
+            gameState.correctAnswers += correct;
+            result.style.display = "block";
+            updateStats();
+        }
+        
+        // Word Builder Functions
+        function initWordBuilder() {
+            const words = [
+                { word: ['ب', 'ا', 'ب'], name: 'Porte (باب)' },
+                { word: ['ك', 'ل', 'ب'], name: 'Chien (كلب)' },
+                { word: ['ق', 'ل', 'م'], name: 'Stylo (قلم)' }
+            ];
+            
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            gameState.targetWord = randomWord;
+            
+            document.getElementById('wordTarget').textContent = randomWord.name;
+            
+            const slotsDiv = document.getElementById('wordSlots');
+            slotsDiv.innerHTML = randomWord.word.map((_, i) => `
+                <div class="letter-slot" data-position="${i}" ondrop="dropLetter(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+            `).join('');
+            
+            const bankDiv = document.getElementById('letterBank');
+            const shuffled = [...randomWord.word].sort(() => Math.random() - 0.5);
+            bankDiv.innerHTML = shuffled.map((letter, i) => `
+                <div class="draggable" draggable="true" ondragstart="drag(event)" id="letter${i}">
+                    ${letter}
+                </div>
+            `).join('');
+        }
+        
+        function dropLetter(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('over');
+            const data = ev.dataTransfer.getData("text");
+            const draggedElement = document.getElementById(data);
+            
+            if (ev.currentTarget.children.length === 0) {
+                draggedElement.classList.remove('dragging');
+                ev.currentTarget.appendChild(draggedElement);
+                ev.currentTarget.classList.add('filled');
+            }
+        }
+        
+        function checkWordBuilder() {
+            const slots = document.querySelectorAll('.letter-slot');
+            let userWord = [];
+            
+            slots.forEach(slot => {
+                const letter = slot.querySelector('.draggable');
+                if (letter) {
+                    userWord.push(letter.textContent.trim());
+                }
+            });
+            
+            const result = document.getElementById('builderResult');
+            
+            if (JSON.stringify(userWord) === JSON.stringify(gameState.targetWord.word)) {
+                result.innerHTML = "🎉 Bravo! Tu as formé le bon mot!";
+                result.className = "result correct";
+                
+                if (!gameState.completedLessons.includes(34)) {
+                    gameState.completedLessons.push(34);
+                    gameState.points += 20;
+                    gameState.correctAnswers++;
+                    gameState.totalQuestions++;
+                    document.querySelectorAll('.nav-btn')[33].classList.add('completed');
+                }
+            } else {
+                result.innerHTML = "📝 Pas tout à fait! Vérifie l'ordre des lettres.";
+                result.className = "result incorrect";
+                gameState.totalQuestions++;
+            }
+            
+            result.style.display = "block";
+            updateStats();
+        }
+        
+        // Quick Quiz Functions
+        function startQuickQuiz() {
+            gameState.quickScore = 0;
+            gameState.quickTotal = 0;
+            gameState.quickTime = 60;
+            
+            document.getElementById('quickScore').textContent = '0';
+            document.getElementById('quickTotal').textContent = '0';
+            document.getElementById('quickResult').style.display = 'none';
+            document.getElementById('startQuickBtn').style.display = 'none';
+            
+            gameState.quickTimer = setInterval(() => {
+                gameState.quickTime--;
+                document.getElementById('timer').textContent = gameState.quickTime;
+                
+                if (gameState.quickTime <= 0) {
+                    endQuickQuiz();
+                }
+            }, 1000);
+            
+            showQuickQuestion();
+        }
+        
+        function showQuickQuestion() {
+            const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+            gameState.currentQuickLetter = randomLetter;
+            
+            const otherLetters = letters.filter(l => l.name !== randomLetter.name);
+            const options = [randomLetter.name];
+            
+            for (let i = 0; i < 3; i++) {
+                const random = otherLetters[Math.floor(Math.random() * otherLetters.length)];
+                if (!options.includes(random.name)) {
+                    options.push(random.name);
+                }
+            }
+            
+            options.sort(() => Math.random() - 0.5);
+            
+            const questionDiv = document.getElementById('quickQuestion');
+            questionDiv.innerHTML = `
+                <div class="arabic">${randomLetter.letter}</div>
+                <div class="quick-options">
+                    ${options.map(opt => `
+                        <div class="quick-option" onclick="checkQuickAnswer('${opt}')">
+                            ${opt}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        function checkQuickAnswer(answer) {
+            gameState.quickTotal++;
+            
+            if (answer === gameState.currentQuickLetter.name) {
+                gameState.quickScore++;
+            }
+            
+            document.getElementById('quickScore').textContent = gameState.quickScore;
+            document.getElementById('quickTotal').textContent = gameState.quickTotal;
+            
+            if (gameState.quickTime > 0) {
+                showQuickQuestion();
+            }
+        }
+        
+        function endQuickQuiz() {
+            clearInterval(gameState.quickTimer);
+            
+            const result = document.getElementById('quickResult');
+            const percentage = gameState.quickTotal > 0 ? 
+                Math.round((gameState.quickScore / gameState.quickTotal) * 100) : 0;
+            
+            result.innerHTML = `⏱️ Temps écoulé!<br>Tu as reconnu ${gameState.quickScore}/${gameState.quickTotal} lettres correctement (${percentage}%)!`;
+            result.className = "result correct";
+            result.style.display = "block";
+            
+            document.getElementById('startQuickBtn').style.display = 'block';
+            document.getElementById('startQuickBtn').textContent = 'Recommencer';
+            
+            gameState.totalQuestions += gameState.quickTotal;
+            gameState.correctAnswers += gameState.quickScore;
+            
+            if (!gameState.completedLessons.includes(35) && gameState.quickScore >= 10) {
+                gameState.completedLessons.push(35);
+                gameState.points += 40;
+                document.querySelectorAll('.nav-btn')[34].classList.add('completed');
+            }
+            
+            updateStats();
+        }
+        
+        // Initialize
+        generateLessonContent();
+        updateStats();
+    </script>
+</body>
+</html>
